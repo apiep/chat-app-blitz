@@ -1,5 +1,5 @@
-import { ReactNode } from "react"
-import { Head } from "blitz"
+import { ReactNode, Suspense } from 'react'
+import { Head } from 'blitz'
 
 type LayoutProps = {
   title?: string
@@ -10,11 +10,11 @@ const Layout = ({ title, children }: LayoutProps) => {
   return (
     <>
       <Head>
-        <title>{title || "chat-app-blitz"}</title>
+        <title>{title || 'chat-app-blitz'}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {children}
+      <Suspense fallback={'Loading ...'}>{children}</Suspense>
     </>
   )
 }

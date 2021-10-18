@@ -23,6 +23,8 @@ model User {
 
   tokens   Token[]
   sessions Session[]
+  messages Message[]
+  rooms    ChatRoom[]
 }
 
 model Session {
@@ -46,8 +48,6 @@ model Token {
   updatedAt   DateTime @updatedAt
   hashedToken String
   type        String
-  // See note below about TokenType enum
-  // type        TokenType
   expiresAt   DateTime
   sentTo      String
 
@@ -57,9 +57,22 @@ model Token {
   @@unique([hashedToken, type])
 }
 
-// NOTE: It's highly recommended to use an enum for the token type
-//       but enums only work in Postgres.
-//       See: https://blitzjs.com/docs/database-overview#switch-to-postgresql
-// enum TokenType {
-//   RESET_PASSWORD
-// }
+model Message {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  text       String
+  author     User     @relation(fields: [authorId], references: [id])
+  authorId   Int
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId Int
+}
+
+model ChatRoom {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  name      String
+  people    User[]
+  messages  Message[]
+}
